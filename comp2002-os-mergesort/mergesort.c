@@ -44,8 +44,32 @@ void my_mergesort(int left, int right){
 }
 
 /* this function will be called by the testing program. */
-void * parallel_mergesort(void *arg){
-		return NULL;
+void * parallel_mergesort(void *arg) {
+
+    // Cast into arg struct from mergesort.h
+    struct argument *args = (struct argument*) arg;
+
+    int left  = args->left;
+    int right = args->right;
+
+    int level = args->level;
+
+
+    // Base case
+
+    if(level <= 0)
+    {
+        my_mergesort(left, right);
+    }
+    else
+    {
+        // Todo: divide up threads
+    }
+
+    free(args);
+
+
+    return NULL;
 }
 
 /* we build the argument for the parallel_mergesort function. */
