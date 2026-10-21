@@ -54,8 +54,15 @@ void * parallel_mergesort(void *arg) {
 
     int level = args->level;
 
+    // Base cases
 
-    // Base case
+    
+    if(left >= right)
+    {
+        free(args);
+        return NULL;
+    }
+
 
     if(level <= 0)
     {
@@ -63,7 +70,26 @@ void * parallel_mergesort(void *arg) {
     }
     else
     {
-        // Todo: divide up threads
+        // Divide up threads
+        pthread_t thread1, thread2;
+        
+        // Get middle for merge sort
+        int middle = left + (right - left) / 2;
+
+        struct argument *arg1 = buildArgs(left, middle, level - 1);
+        struct argument *arg2 = buildArgs(middle + 1, right, level - 1);
+
+        // Split off threads recursively
+        // (call pthread_create(), which will then call parallel_mergesort())
+
+        pthread_create(&thread1, NULL, parallel_mergesort, arg1);
+        pthread_create(&thread2, NULL, parallel_mergesort, arg2);
+
+        // Work is done, join back and merge results
+        pthread_join(thread1, NULL);
+        pthread_join(thread2, NULL);
+
+        merge(left, middle, middle + 1, right);
     }
 
     free(args);
