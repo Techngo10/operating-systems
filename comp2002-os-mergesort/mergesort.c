@@ -82,14 +82,13 @@ void * parallel_mergesort(void *arg) {
         // Split off threads recursively
         // (call pthread_create(), which will then call parallel_mergesort())
 
-        pthread_create(&thread1, NULL, parallel_mergesort, arg1);
-        pthread_create(&thread2, NULL, parallel_mergesort, arg2);
+        // Optimisation, run parallel mergesort on this thread too
 
+        pthread_create(&thread1, NULL, parallel_mergesort, arg1);
+        parallel_mergesort(arg2);
+        
         // Work is done, join back and merge results
         pthread_join(thread1, NULL);
-        pthread_join(thread2, NULL);
-
-        merge(left, middle, middle + 1, right);
     }
 
     free(args);
