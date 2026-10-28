@@ -1,4 +1,9 @@
 #pragma once
+#define TRUE 1
+#define FALSE 0
+
+#include <pthread.h>
+
 // function prototypes
 void my_mergesort(int left, int right);
 void merge(int leftstart, int leftend, int rightstart, int rightend);
