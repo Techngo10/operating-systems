@@ -14,9 +14,9 @@ auto& operator<<(auto& stream, std::span<int>const&arr)
 	return stream;
 }
 
-int *A;
-int *B;
-int cutoff = 0;
+inline int *A;
+inline int *B;
+inline int cutoff = 0;
 int main()
 {
 	cutoff = 3;
@@ -30,15 +30,19 @@ int main()
         const std::span<int> b{ B, i };
 		for(int& x: a)
 			x = distrib(gen);
-		std::vector<int> cpy{a.begin(), a.end()};
-		std::stable_sort(cpy.begin(), cpy.end());
-		// parallel_mergesort_impl(arr.data(), buf.data(), i, cutoff);
-		// if(arr != cpy)
-		// {
-		// 	std::cout << "fail\n";
-		// 	std::cout << arr<< '\n';
-		// 	std::cout << cpy<< '\n';
-		// }
+		std::vector<int> expected{a.begin(), a.end()};
+		std::stable_sort(expected.begin(), expected.end());
+		auto* args{buildArgs(0, i-1, 0)};
+		parallel_mergesort(args);
+		free(args);
+		if(const std::span<int> e{expected.begin(), expected.end()}; !std::ranges::equal(a, expected))
+		{
+			std::cout << "fail\n";
+			std::cout << a << '\n';
+			std::cout << e << '\n';
+		}
+		free(A);
+		free(B);
 	}
 	std::cout << "success\n";
 }
