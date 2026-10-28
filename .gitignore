@@ -1,0 +1,12 @@
+*
+!*/
+!.gitignore
+!*.h
+!*.c
+!*.cpp
+!*.md
+!*.sh
+!*.bat
+!*.txt
+!Makefile
+!*.template
