@@ -20,7 +20,7 @@ inline int cutoff = 0;
 int main()
 {
 	static constexpr std::size_t max_array_size{10000};
-	static constexpr std::size_t max_cutoff{3};
+	static constexpr std::size_t max_cutoff{5};
 
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<int> distrib(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());

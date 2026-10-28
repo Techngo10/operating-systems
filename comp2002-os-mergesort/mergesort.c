@@ -16,12 +16,10 @@ void merge(int leftstart, int leftend, int rightstart, int rightend)
 
     /* Compare both sorted halves and take the smaller value. */
     while (i <= leftend && j <= rightend) 
-    {
         if (A[i] <= A[j])
             B[k++] = A[i++];
         else
             B[k++] = A[j++];
-    }
 
     /* Copy anything remaining in the left half. */
     while (i <= leftend)
@@ -32,8 +30,7 @@ void merge(int leftstart, int leftend, int rightstart, int rightend)
         B[k++] = A[j++];
 
     /* Copy the merged values back into the original array. */
-    for (k = leftstart; k <= rightend; k++)
-        A[k] = B[k];
+    memcpy(A + leftstart, B + leftstart, (rightend - leftstart + 1) * sizeof(int));
 }
 
 /* this function will be called by parallel_mergesort() as its base case. */
@@ -69,7 +66,7 @@ void* parallel_mergesort(void *arg)
     }
     else
         my_mergesort(left, right);
-    return NULL;
+    return 0;
 }
 
 /* we build the argument for the parallel_mergesort function. */
