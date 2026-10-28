@@ -40,7 +40,14 @@ void merge(int leftstart, int leftend, int rightstart, int rightend)
 }
 
 /* this function will be called by parallel_mergesort() as its base case. */
-void my_mergesort(int left, int right){
+void my_mergesort(int left, int right)
+{
+    const int size = right - left + 1;
+    const int half = size / 2;
+    if (size < 2)return;
+    my_mergesort(left       , left + half - 1);
+    my_mergesort(left + half, right          );
+    merge(left, left + half - 1, left + half, right);
 }
 
 /* this function will be called by the testing program. */
@@ -50,26 +57,22 @@ void* parallel_mergesort(void *arg)
     const int left   = args->left;
     const int right  = args->right;
     const int size   = right - left + 1;
-    const int half = size / 2;
+    const int half   = size / 2;
     const int level  = args->level;
     // Base cases
     if (size < 2)return 0;
-
-    struct argument arg1 = {.left = left       , .right = left + half - 1, .level = level + 1};
-    struct argument arg2 = {.left = left + half, .right = right          , .level = level + 1};
     if (level < cutoff)
     {
+        struct argument arg1 = {.left = left       , .right = left + half - 1, .level = level + 1};
+        struct argument arg2 = {.left = left + half, .right = right          , .level = level + 1};
         pthread_t thread;
 		pthread_create(&thread, 0, parallel_mergesort, &arg2);
 		parallel_mergesort(&arg1);
 		pthread_join(thread, 0);
+        merge(left, left + half - 1, left + half, right);
     }
     else
-    {
-        parallel_mergesort(&arg1);
-		parallel_mergesort(&arg2);
-    }
-    merge(left, left + half - 1, left + half, right);
+        my_mergesort(left, right);
     return NULL;
 }
 
