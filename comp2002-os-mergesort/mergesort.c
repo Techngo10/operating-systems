@@ -56,8 +56,8 @@ void* parallel_mergesort(void *arg)
 	if (size < 2)return 0;
 	if (level < cutoff)
 	{
-		struct argument arg1 = {.left = left	   , .right = left + half - 1, .level = level + 1};//place args on stack instead of calling buildArgs
-		struct argument arg2 = {.left = left + half, .right = right		  , .level = level + 1};//because buildArgs malloc
+		struct argument arg1 = {.left = left       , .right = left + half - 1, .level = level + 1};//place args on stack instead of calling buildArgs
+		struct argument arg2 = {.left = left + half, .right = right          , .level = level + 1};//because buildArgs malloc
 		pthread_t thread;
 		pthread_create(&thread, 0, parallel_mergesort, &arg2);
 		parallel_mergesort(&arg1);
