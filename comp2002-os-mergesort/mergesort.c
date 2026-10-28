@@ -2,11 +2,10 @@
  * This file implements parallel mergesort.
  */
 
-#include <stdio.h>
 #include <string.h> /* for memcpy */
 #include <stdlib.h> /* for malloc */
-#include <stdbool.h>
 #include <pthread.h>
+#include <stdbool.h>
 #include "mergesort.h"
 
 /* this function will be called by mergesort() and also by parallel_mergesort(). */
@@ -49,6 +48,7 @@ void my_mergesort(int left, int right)
 /* this function will be called by the testing program. */
 void* parallel_mergesort(void *arg) 
 {
+	if(!arg)return 0;
 	struct argument *args = (struct argument*) arg;
 	const int left  = args->left;
 	const int right = args->right;
@@ -58,13 +58,17 @@ void* parallel_mergesort(void *arg)
 	if (size < 2)return 0;
 	if (level < cutoff)
 	{
-		struct argument arg1 = {.left = left       , .right = left + half - 1, .level = level + 1};//place args on stack instead of calling buildArgs
-		struct argument arg2 = {.left = left + half, .right = right          , .level = level + 1};//because buildArgs malloc
-		pthread_t thread;
-		const bool thread_created = !pthread_create(&thread, 0, parallel_mergesort, &arg2);
-		if(!thread_created)parallel_mergesort(&arg2);
-		parallel_mergesort(&arg1);
-		if(thread_created)pthread_join(thread, 0);
+		struct argument* arg1 = buildArgs(left       , left + half - 1, level + 1);//malloc might fail
+		struct argument* arg2 = buildArgs(left + half, right          , level + 1);//malloc might fail
+		pthread_t thread1, thread2;
+		const bool thread_created1 = arg1 && !pthread_create(&thread1, 0, parallel_mergesort, arg1);
+		const bool thread_created2 = arg2 && !pthread_create(&thread2, 0, parallel_mergesort, arg2);
+		if (!thread_created1) my_mergesort(left       , left + half - 1);
+		if (!thread_created2) my_mergesort(left + half, right          );
+		if (thread_created1) pthread_join(thread1, 0); 
+		if (thread_created2) pthread_join(thread2, 0); 
+		free(arg1);//free(0) is fine in c/c++
+		free(arg2);//free(0) is fine in c/c++
 		merge(left, left + half - 1, left + half, right);
 	}
 	else
@@ -76,6 +80,7 @@ void* parallel_mergesort(void *arg)
 struct argument* buildArgs(int left, int right, int level)
 {
 	struct argument* result = (struct argument*)malloc(sizeof(struct argument));
+	if(!result)return 0;//handle malloc failure
 	result->left = left;
 	result->right = right;
 	result->level = level;
