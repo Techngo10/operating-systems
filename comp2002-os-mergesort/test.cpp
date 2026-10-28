@@ -19,30 +19,39 @@ inline int *B;
 inline int cutoff = 0;
 int main()
 {
-	cutoff = 3;
+	static constexpr std::size_t max_array_size{10000};
+	static constexpr std::size_t max_cutoff{3};
+
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<int> distrib(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-	for(std::size_t i{10000};i--;)
+	std::vector<int> buffer(max_array_size * 3);
+	A = buffer.data();
+	B = buffer.data() + max_array_size;
+	int* pExpected{ buffer.data() + max_array_size * 2 };
+	for(std::size_t i{max_array_size + 1};i--;)
 	{
-        A = (int*)malloc(sizeof(int) * i);
-        B = (int*)malloc(sizeof(int) * i);
-        const std::span<int> a{ A, i };
-        const std::span<int> b{ B, i };
-		for(int& x: a)
-			x = distrib(gen);
-		std::vector<int> expected{a.begin(), a.end()};
-		std::stable_sort(expected.begin(), expected.end());
-		auto* args{buildArgs(0, i-1, 0)};
-		parallel_mergesort(args);
-		free(args);
-		if(const std::span<int> e{expected.begin(), expected.end()}; !std::ranges::equal(a, expected))
+		const std::span<int> a{ A, i };
+		const std::span<int> b{ B, i };
+		const std::span<int> e{ pExpected, i };
+		for(cutoff = max_cutoff + 1; cutoff--;)
 		{
-			std::cout << "fail\n";
-			std::cout << a << '\n';
-			std::cout << e << '\n';
+			int* pE{ pExpected };
+			for(int& x: a)
+			{
+				x = distrib(gen);
+				*pE++ = x;
+			}
+			auto* args{buildArgs(0, i-1, 0)};
+			parallel_mergesort(args);
+			free(args);
+			std::sort(e.begin(), e.end());
+			if(!std::ranges::equal(a, e))[[unlikely]]
+			{
+				std::cout << "fail\n";
+				std::cout << a << '\n';
+				std::cout << e << '\n';
+			}
 		}
-		free(A);
-		free(B);
 	}
 	std::cout << "success\n";
 }
