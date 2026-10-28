@@ -22,7 +22,7 @@ int main()
 	cutoff = 3;
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<int> distrib(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-	for(std::size_t i{100};i--;)
+	for(std::size_t i{10000};i--;)
 	{
         A = (int*)malloc(sizeof(int) * i);
         B = (int*)malloc(sizeof(int) * i);
