@@ -1,9 +1,4 @@
 #pragma once
-#define TRUE 1
-#define FALSE 0
-
-#include <pthread.h>
-
 // function prototypes
 void my_mergesort(int left, int right);
 void merge(int leftstart, int leftend, int rightstart, int rightend);
@@ -29,4 +24,3 @@ extern int *A;
 
 /* when merge, we need a temp array (named B) to temporarily store elements of the original array */
 extern int *B;
-

@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h> /* for memcpy */
 #include <stdlib.h> /* for malloc */
+#include <stdbool.h>
+#include <pthread.h>
 #include "mergesort.h"
 
 /* this function will be called by mergesort() and also by parallel_mergesort(). */
@@ -59,9 +61,10 @@ void* parallel_mergesort(void *arg)
 		struct argument arg1 = {.left = left       , .right = left + half - 1, .level = level + 1};//place args on stack instead of calling buildArgs
 		struct argument arg2 = {.left = left + half, .right = right          , .level = level + 1};//because buildArgs malloc
 		pthread_t thread;
-		pthread_create(&thread, 0, parallel_mergesort, &arg2);
+		const bool thread_created = !pthread_create(&thread, 0, parallel_mergesort, &arg2);
+		if(!thread_created)parallel_mergesort(&arg2);
 		parallel_mergesort(&arg1);
-		pthread_join(thread, 0);
+		if(thread_created)pthread_join(thread, 0);
 		merge(left, left + half - 1, left + half, right);
 	}
 	else
