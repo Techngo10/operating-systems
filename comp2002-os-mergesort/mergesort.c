@@ -39,8 +39,8 @@ void my_mergesort(int left, int right)
 	const int size = right - left + 1;
 	const int half = size / 2;
 	if (size < 2)return;
-	my_mergesort(left	   , left + half - 1);
-	my_mergesort(left + half, right		  );
+	my_mergesort(left       , left + half - 1);
+	my_mergesort(left + half, right          );
 	merge(left, left + half - 1, left + half, right);
 }
 
@@ -48,11 +48,11 @@ void my_mergesort(int left, int right)
 void* parallel_mergesort(void *arg) 
 {
 	struct argument *args = (struct argument*) arg;
-	const int left   = args->left;
-	const int right  = args->right;
-	const int size   = right - left + 1;
-	const int half   = size / 2;
-	const int level  = args->level;
+	const int left  = args->left;
+	const int right = args->right;
+	const int size  = right - left + 1;
+	const int half  = size / 2;
+	const int level = args->level;
 	if (size < 2)return 0;
 	if (level < cutoff)
 	{
