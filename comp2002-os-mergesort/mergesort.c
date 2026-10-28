@@ -15,28 +15,25 @@ void merge(int leftstart, int leftend, int rightstart, int rightend)
     int k = leftstart;
 
     /* Compare both sorted halves and take the smaller value. */
-    while (i <= leftend && j <= rightend) {
-        if (A[i] <= A[j]) {
+    while (i <= leftend && j <= rightend) 
+    {
+        if (A[i] <= A[j])
             B[k++] = A[i++];
-        } else {
+        else
             B[k++] = A[j++];
-        }
     }
 
     /* Copy anything remaining in the left half. */
-    while (i <= leftend) {
+    while (i <= leftend)
         B[k++] = A[i++];
-    }
 
     /* Copy anything remaining in the right half. */
-    while (j <= rightend) {
+    while (j <= rightend)
         B[k++] = A[j++];
-    }
 
     /* Copy the merged values back into the original array. */
-    for (k = leftstart; k <= rightend; k++) {
+    for (k = leftstart; k <= rightend; k++)
         A[k] = B[k];
-    }
 }
 
 /* this function will be called by parallel_mergesort() as its base case. */
@@ -59,12 +56,11 @@ void* parallel_mergesort(void *arg)
     const int size   = right - left + 1;
     const int half   = size / 2;
     const int level  = args->level;
-    // Base cases
     if (size < 2)return 0;
     if (level < cutoff)
     {
-        struct argument arg1 = {.left = left       , .right = left + half - 1, .level = level + 1};
-        struct argument arg2 = {.left = left + half, .right = right          , .level = level + 1};
+        struct argument arg1 = {.left = left       , .right = left + half - 1, .level = level + 1};//place args on stack instead of calling buildArgs
+        struct argument arg2 = {.left = left + half, .right = right          , .level = level + 1};//because buildArgs malloc
         pthread_t thread;
 		pthread_create(&thread, 0, parallel_mergesort, &arg2);
 		parallel_mergesort(&arg1);
