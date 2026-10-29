@@ -47,7 +47,11 @@ int main()
     for(usize iSize{}; iSize!=array_sizes.size(); ++iSize)
 	{
         const std::size_t size{array_sizes[iSize]};
+        const auto speed_serial{ result[0][iSize]/double(repeat*size) };
         for(usize cutoff{}; cutoff <= max_cutoff; ++cutoff)
-            std::cout << "size = " << size << ", cutoff = " << cutoff << ", speed (time/int) = " << result[cutoff][iSize]/double(repeat*size) << '\n';
+        {
+            const auto speed{ result[cutoff][iSize]/double(repeat*size) };
+            std::cout << "size = " << size << ", cutoff = " << cutoff << ", speed (time/int) = " << speed << ", speedup = " << speed_serial/speed << '\n';
+        }
     }
 }
