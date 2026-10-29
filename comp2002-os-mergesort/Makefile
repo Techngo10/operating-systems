@@ -1,20 +1,20 @@
-CC = gcc
-CFLAGS = -Wall -Wpointer-arith -Wstrict-prototypes -std=gnu89 -fPIC -MMD -MP -lpthread
+CXX = g++
+CXXFLAGS = -O3 -std=c++20 -Wall -Wextra
 
-all: test-mergesort
+.PHONY: all check benchmark clean
+all: correctness_test speed_test
 
-#This builds an executable 
-test-mergesort: test-mergesort.o mergesort.o
-	$(CC) $(CFLAGS) -o $@ $^
+correctness_test: correctness_test.cpp mergesort.c mergesort.h
+	$(CXX) $(CXXFLAGS) -pthread -x c++ correctness_test.cpp mergesort.c -o $@
 
-# Build the simple merge test with the merge implementation.
-test-merge: test-merge.o mergesort.o
-	$(CC) $(CFLAGS) -o $@ $^
+speed_test: speed_test.cpp mergesort.c mergesort.h
+	$(CXX) $(CXXFLAGS) -pthread -x c++ speed_test.cpp mergesort.c -o $@
 
-# Run our merge test.
-.PHONY: test clean
-test: test-merge
-	./test-merge
+check: correctness_test
+	./correctness_test
+
+benchmark: speed_test
+	./speed_test
 
 clean:
-	/bin/rm -f *.o *.d test-mergesort test-merge
+	rm -f correctness_test speed_test

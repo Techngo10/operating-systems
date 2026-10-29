@@ -6,6 +6,8 @@
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <vector>
+#include <cstdlib>
 
 using usize = std::size_t;
 
@@ -14,10 +16,13 @@ inline int *B;
 inline int cutoff = 0;
 int main()
 {
-    static constexpr std::array array_sizes{ []<usize...I>(std::index_sequence<I...>)static
+    static constexpr auto array_sizes = []
     {
-        return std::array<usize, sizeof...(I)>{ (usize{1}<<(10+I))... };
-    }(std::make_index_sequence<14>{}) };
+        std::array<usize, 14> sizes{};
+        for (usize i = 0; i < sizes.size(); ++i)
+            sizes[i] = usize{1} << (10 + i);
+        return sizes;
+    }();
 	static constexpr std::size_t max_cutoff{7};//my zen4 has only 16core / 32threads
     static constexpr std::size_t repeat{8};
     std::chrono::steady_clock::duration result[max_cutoff+1][array_sizes.size()]{};
@@ -51,7 +56,7 @@ int main()
         for(usize cutoff{}; cutoff <= max_cutoff; ++cutoff)
         {
             const auto speed{ result[cutoff][iSize]/double(repeat*size) };
-            std::cout << "size = " << size << ", cutoff = " << cutoff << ", speed (time/int) = " << speed << ", speedup = " << speed_serial/speed << '\n';
+            std::cout << "size = " << size << ", cutoff = " << cutoff << ", speed (ns/int) = " << std::chrono::duration<double, std::nano>(speed).count() << ", speedup = " << speed_serial/speed << '\n';
         }
     }
 }

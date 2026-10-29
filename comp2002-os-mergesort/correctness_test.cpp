@@ -4,6 +4,8 @@
 #include <span>
 #include <algorithm>
 #include <iostream>
+#include <vector>
+#include <cstdlib>
 auto& operator<<(auto& stream, std::span<int>const&arr)
 {
 	for(const int x: arr)
@@ -41,7 +43,7 @@ int main()
 				x = distrib(gen);
 				*pE++ = x;
 			}
-			auto* args{buildArgs(0, i-1, 0)};
+			auto* args{buildArgs(0, static_cast<int>(i)-1, 0)};
 			parallel_mergesort(args);
 			free(args);
 			std::sort(e.begin(), e.end());
@@ -50,6 +52,7 @@ int main()
 				std::cout << "fail\n";
 				std::cout << a << '\n';
 				std::cout << e << '\n';
+				return EXIT_FAILURE;
 			}
 		}
 	}
