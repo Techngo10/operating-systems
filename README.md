@@ -82,6 +82,7 @@ Sequential merge sort testing:
 We ran test-mergesort.c witht the arguments 100000 0 42. This generated 100,000 integers using seed 42. A cutoff of 0 used sequential merge sort. The program reported successful sorting and printed the elapsed time.
 
 | Input size | Cutoff | Seed | Time (seconds) |
+|   ---  | - | -- |  --  |
 | 100000 | 0 | 42 | 0.02 |
 
 Parallel merge sort and cutoff testing:
@@ -89,6 +90,7 @@ Parallel merge sort and cutoff testing:
 We repeated the test with arguments 100000 2 42 to test parallel merge sort with a cutoff level of 2. Keeping the input size and seed unchanged gave us the same input as the sequential test. The program again reported successful sorting.
 
 | Input size | Cutoff | Seed | Time (seconds) |
+|   ---  | - | -- |  --  |
 | 100000 | 2 | 42 | 0.01 |
 
 Timing comparisons and additional cases:
