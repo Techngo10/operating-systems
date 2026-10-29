@@ -101,6 +101,35 @@ Timing comparisons and additional cases:
 | 100000 | 2 | 42 | 0.01 |
 
 
+| Input size | Cutoff | Seed | What it checks | Result | Time (s) |
+|---|---|---|---|---|---|
+| 2 | 0 | 42 | Smallest supported input using sequential sorting | Passed | 0.00 |
+| 2 | 2 | 42 | Threaded sorting stops correctly for tiny input | Passed | 0.00 |
+| 7 | 0 | 42 | Sequential sorting handles uneven halves | Passed | 0.00 |
+| 7 | 2 | 42 | Parallel sorting handles uneven halves | Passed | 0.00 |
+| 100000 | 1 | 42 | Sorting works with a cutoff level of 1 | Passed | 0.02 |
+| 100000 | 3 | 123 | Sorting works with a deeper cutoff and a different seed | Passed | 0.01 |
+| 1 | 0 | 42 | Input below the minimum size is rejected | Rejected as expected | N/A |
+
+These tests checked small inputs, uneven halves, different cutoff levels
+and invalid input handling. Times of 0.00 seconds reflect the displayed
+precision rather than zero execution time.
+
+
+| Input size | Cutoff | Seed | Time (s) |
+|---|---|---|---|
+| 1000000 | 0 | 42 | 0.28 |
+| 1000000 | 1 | 42 | 0.21 |
+| 1000000 | 2 | 42 | 0.20 |
+| 1000000 | 3 | 42 | 0.17 |
+
+We compared sequential and parallel sorting using one million integers
+with the same random seed. In these runs, the time decreased from
+0.28 seconds with cutoff 0 to 0.17 seconds with cutoff 3. These are
+single-run measurements, so repeated runs would be needed to establish
+whether the improvement is consistent.
+
+
 ## Known Bugs
 
 List known bugs that you weren't able to fix (or ran out of time to fix).
@@ -120,5 +149,7 @@ To be completed by the group based on the work and testing carried out.
 ## Sources Used
 
 * Supplied COMP2002 starter files and README template: https://github.com/Techngo10/operating-systems/tree/main/comp2002-os-mergesort
+
+* ChatGPT (openAI) was used to with testing and result tables
 
 Group members should add any other sources they actually used, including documentation, websites and textbook references.
