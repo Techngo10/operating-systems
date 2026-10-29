@@ -143,13 +143,7 @@ We also worked through how to build the test separately. The test supplies the s
 
 Further reflection on sequential sorting, threads, development issues and group contributions:
 
-To be completed by the group based on the work and testing carried out.
-
 
 ## Sources Used
 
 * Supplied COMP2002 starter files and README template: https://github.com/Techngo10/operating-systems/tree/main/comp2002-os-mergesort
-
-* ChatGPT (openAI) was used to with testing and result tables
-
-Group members should add any other sources they actually used, including documentation, websites and textbook references.
