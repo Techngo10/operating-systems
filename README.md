@@ -59,10 +59,10 @@ Merging uses the temporary array `B` before copying the result back into `A`. Th
 ### correctness_test.cpp
 
 1. loops over $\{\text{size}\in [0,10000]\} \times \{\text{cutoff}\in [0,7]\}$
-2. for each pair fill A with random ints, fill any other array `expected` of same `size` with same ints as A
+2. for each pair fill A with random ints, fill another array `expected` of same `size` with same ints as A
 3. sort `A` with `parallel_mergesort`
 4. sort `expected` with `std::sort`
-5. if `A!=expected` test fail
+5. if `A!=expected`, then test fails
 6. print `"success"` if 0 test fails
 
 ### speed_test.cpp
@@ -123,14 +123,16 @@ none
 
 1. theres no way to pass `which array to sort` as argument
 2. global variable (when it can be avoided by letting users pass array as arg)
-3. `buildArgs` requires heap allocated memory (which can be avoided by having `argument` as stack variable)
+3. `buildArgs` requires heap allocation (which can be avoided by having `argument` as stack variable)
 
 ### potential optimization opportunity exists, but implementing it risks violating rubric, or confuses grader, or both
+
+> see my post on `https://edstem.org/au/courses/38313/discussion/3682500` for detail
 
 1. place args on stack stead of calling `buildArgs` to skip `malloc`/`free`
 2. spawn only 1 extra thread per `parallel_mergesort` call
 
-**(skips no error checking for clarity)**
+**(skips error checking for clarity)**
 
 instead of
 ```c++
@@ -151,9 +153,6 @@ pthread_create(&thread, 0, parallel_mergesort, &arg2);
 parallel_mergesort(&arg1);
 pthread_join(thread, 0);
 ```
-
-* see `https://edstem.org/au/courses/38313/discussion/3682500` for detail
-
 
 ## Sources Used
 
