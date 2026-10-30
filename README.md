@@ -28,13 +28,15 @@ This program uses POSIX threads to implement parallel merge sort to sort an arra
 **build and run `correctness_test.cpp`**
 
 ```bash
-make check
+g++ -o3 -march=native -std=c++20 "mergesort.c" "correctness_test.cpp" -o correctness_test
+./correctness_test
 ```
 
 **build and run `speed_test.cpp`**
 
 ```bash
-make benchmark
+g++ -o3 -march=native -std=c++20 "mergesort.c" "speed_test.cpp" -o speed_test
+./speed_test
 ```
 
 ### windows
