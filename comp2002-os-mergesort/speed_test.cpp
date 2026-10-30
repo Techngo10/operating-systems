@@ -49,6 +49,14 @@ int main()
                 free(args);
             }
 	}
+
+
+    // Table format
+
+    // header
+
+    std::cout << "| size | cutoff | speed (ns/int) | speedup |\n|-----:|-----:|-----:|-----:|\n" << std::fixed << std::setprecision(3);
+
     for(usize iSize{}; iSize!=array_sizes.size(); ++iSize)
 	{
         const std::size_t size{array_sizes[iSize]};
@@ -56,7 +64,7 @@ int main()
         for(usize cutoff{}; cutoff <= max_cutoff; ++cutoff)
         {
             const auto speed{ result[cutoff][iSize]/double(repeat*size) };
-            std::cout << "size = " << size << ", cutoff = " << cutoff << ", speed (ns/int) = " << std::chrono::duration<double, std::nano>(speed).count() << ", speedup = " << speed_serial/speed << '\n';
+            std::cout << "|" << size << "|" << cutoff << "|" << std::chrono::duration<double, std::nano>(speed).count() << "|" << speed_serial/speed << '|\n';
         }
     }
 }

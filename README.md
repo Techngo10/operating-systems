@@ -5,8 +5,7 @@
 
 ## Overview
 
-This program sorts random integers using merge sort, with POSIX threads used to sort separate halves in parallel. A cutoff level controls when it switches to sequential sorting, and the test program checks the final order and reports the time taken.
-
+This program uses POSIX threads to implement parallel merge sort to sort an array of random integers. A cutoff level controls the switch from parallel to sequential sorting, and the test program checks the order for correctness and measures the run time.
 
 ## Manifest
 
@@ -20,9 +19,9 @@ This program sorts random integers using merge sort, with POSIX threads used to 
 
 ## Building the project
 
-The project needs GCC, Make and a Linux/POSIX environment with pthread support. On Windows, use a Linux environment such as WSL because the supplied test program uses Unix headers and functions.
+This project requires GCC, Make, and a Linux environment with pthread support. If on Windows, use an environment like WSL, as the supplied test program uses Unix headers and functions.
 
-From the `comp2002-os-mergesort` folder, build the full sorting program with:
+From the `comp2002-os-mergesort` folder, build the sorting program using:
 
 ```bash
 make
@@ -41,7 +40,7 @@ make clean
 ```
 
 
-## Features and usage
+## Features and Usage
 
 Run the full program with three arguments:
 
