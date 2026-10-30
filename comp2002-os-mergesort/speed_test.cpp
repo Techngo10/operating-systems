@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <iomanip>
 
 using usize = std::size_t;
 
@@ -51,20 +52,34 @@ int main()
 	}
 
 
-    // Table format
-
-    // header
-
-    std::cout << "| size | cutoff | speed (ns/int) | speedup |\n|-----|-----|-----|-----|\n" << std::fixed << std::setprecision(3);
-
-    for(usize iSize{}; iSize!=array_sizes.size(); ++iSize)
-	{
-        const std::size_t size{array_sizes[iSize]};
-        const auto speed_serial{ result[0][iSize]/double(repeat*size) };
-        for(usize cutoff{}; cutoff <= max_cutoff; ++cutoff)
+    // total nanoseconds accumulated over `repeat` runs
+    const auto total_ns{[&](usize cutoff, usize iSize)
+    {
+        return std::chrono::duration<double, std::nano>(result[cutoff][iSize]).count();
+    }};
+ 
+    const auto print_table = [&](std::string_view title, auto cell)
+    {
+        std::cout << "\n### " << title << "\n\n| " << title << " |";
+        for (usize cutoff{}; cutoff <= max_cutoff; ++cutoff) std::cout << " cutoff=" << cutoff << " |";
+        std::cout << "\n|---:|";
+        for (usize cutoff{}; cutoff <= max_cutoff; ++cutoff) std::cout << "---:|";
+        std::cout << '\n' << std::fixed << std::setprecision(3);
+        for (usize iSize{}; iSize != array_sizes.size(); ++iSize)
         {
-            const auto speed{ result[cutoff][iSize]/double(repeat*size) };
-            std::cout << "|" << size << "|" << cutoff << "|" << std::chrono::duration<double, std::nano>(speed).count() << "|" << speed_serial/speed << "|\n";
+            std::cout << "| ints=" << array_sizes[iSize] << " |";
+            for (usize cutoff{}; cutoff <= max_cutoff; ++cutoff) std::cout << ' ' << cell(cutoff, iSize) << " |";
+            std::cout << '\n';
         }
-    }
+    };
+ 
+    print_table("Speed (ints/ms)", [&](usize cutoff, usize iSize)
+    {
+        return static_cast<double>(array_sizes[iSize] * repeat) / total_ns(cutoff, iSize) * 1000.;
+    });
+ 
+    print_table("Speedup", [&](usize cutoff, usize iSize)
+    {
+        return total_ns(0, iSize) / total_ns(cutoff, iSize);
+    });
 }
