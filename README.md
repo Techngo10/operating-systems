@@ -1,6 +1,6 @@
 ## Assignment 2 - Programming Task
 
-* Authors: Wenqing Liu (a1944096), Lachlan, Elijah
+* Authors: Wenqing Liu (a1944096), Lachlan, Elijah Ngo (a1924791)
 * Group name: 78
 
 ## Overview
