@@ -25,20 +25,16 @@ This program uses POSIX threads to implement parallel merge sort to sort an arra
 
 `cd` into `comp2002-os-mergesort`
 
+**build and run `correctness_test.cpp`**
+
 ```bash
-make
+make check
 ```
 
-To build and run the separate merge test:
+**build and run `speed_test.cpp`**
 
 ```bash
-make test
-```
-
-To remove the generated files:
-
-```bash
-make clean
+make benchmark
 ```
 
 ### windows

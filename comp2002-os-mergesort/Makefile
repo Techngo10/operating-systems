@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O3 -std=c++20 -Wall -Wextra
+CXXFLAGS = -O3 -std=c++20 -Wall -Wextra -march=native
 
 .PHONY: all check benchmark clean
 all: correctness_test speed_test
